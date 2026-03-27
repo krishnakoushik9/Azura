@@ -652,22 +652,17 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = '';
     }
 
-    // Call button: open dialer + copy to clipboard
+    // Call button: open dialer
     cpCall.addEventListener('click', () => {
-      // Copy number to clipboard silently
-      try {
-        navigator.clipboard.writeText(currentPhone).catch(() => {});
-      } catch(e) {}
-      // Open dialer
       window.location.href = 'tel:+91' + currentPhone;
       closePopup();
     });
 
-    // WhatsApp button: open wa.me with preloaded greeting
+    // WhatsApp button: open wa.me
     cpWa.addEventListener('click', () => {
       const greeting = encodeURIComponent(cpWa.dataset.greeting);
       const waNum    = cpWa.dataset.wa;
-      window.open('https://wa.me/' + waNum + '?text=' + greeting, '_blank');
+      window.location.href = 'https://wa.me/' + waNum + '?text=' + greeting;
       closePopup();
     });
 
@@ -683,23 +678,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Attach triggers to all .contact-trigger spans
+    // Attach triggers to all .contact-trigger spans (click + touch)
+    const handleTrigger = (span) => {
+      openPopup(
+        span.dataset.phone,
+        span.dataset.wa,
+        span.dataset.name,
+        span.dataset.gender
+      );
+    };
+
     document.querySelectorAll('.contact-trigger').forEach(span => {
-      span.addEventListener('click', () => {
-        openPopup(
-          span.dataset.phone,
-          span.dataset.wa,
-          span.dataset.name,
-          span.dataset.gender
-        );
-      });
+      span.addEventListener('click', (e) => { e.preventDefault(); handleTrigger(span); });
+      span.addEventListener('touchstart', (e) => { e.preventDefault(); handleTrigger(span); }, { passive: false });
     });
   })();
 
   // ── FORCE CACHE REFRESH & SW UPDATE ──
   (function() {
-    // 1. Manual Cache Purge (Check for version change)
-    const CURRENT_VERSION = 'azura-v2';
+    const CURRENT_VERSION = 'azura-v3';
     const storedVersion = localStorage.getItem('azura-site-version');
 
     if (storedVersion !== CURRENT_VERSION) {

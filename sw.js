@@ -1,10 +1,11 @@
-const CACHE = 'azura-v2';
+const CACHE = 'azura-v3';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './script.js',
-  './manifest.json'
+  './manifest.json',
+  './eye-track.js'
 ];
 
 self.addEventListener('install', e => {
