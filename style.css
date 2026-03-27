@@ -785,65 +785,75 @@ body::after {
   transform: translateY(0);
 }
 
-/* Glassmorphic Dock */
+/* ── Glassmorphic Dock ── */
 .azura-dock {
   position: fixed;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(40px);
   z-index: 900;
-  background: rgba(30, 22, 14, 0.45);
+  background: rgba(30, 22, 14, 0.55);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
   border: 1px solid rgba(214, 167, 122, 0.18);
-  border-radius: 22px;
-  padding: 8px;
+  border-radius: 100px;
+  padding: 6px 8px;
   display: flex;
-  gap: 8px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(214,167,122,0.12);
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45),
+              inset 0 1px 0 rgba(214,167,122,0.12);
   opacity: 0;
   animation: dockEntrance 0.6s 0.4s ease-out forwards;
+  white-space: nowrap;
 }
 
 @keyframes dockEntrance {
-  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 }
 
 .dock-pill {
-  padding: 8px 16px;
-  border-radius: 14px;
-  color: var(--accent);
+  padding: 8px 20px;
+  border-radius: 100px;
+  color: rgba(243, 226, 208, 0.55);
   font-family: 'DM Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 4px;
   user-select: none;
+  background: transparent;
 }
 
 .dock-pill:hover {
-  transform: scale(1.18);
-  background: rgba(214, 167, 122, 0.08);
-  box-shadow: 0 0 14px rgba(214, 167, 122, 0.35);
   color: var(--primary);
+  background: rgba(214, 167, 122, 0.07);
+  transform: scale(1.08);
+}
+
+.dock-pill.active {
+  color: var(--primary);
+  background: rgba(214, 167, 122, 0.10);
 }
 
 .dock-dot {
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   background: var(--primary);
   border-radius: 50%;
-  position: absolute;
-  bottom: 4px;
   opacity: 0;
   transform: scale(0);
-  transition: all 0.3s ease;
-  box-shadow: 0 0 8px var(--primary);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  flex-shrink: 0;
 }
 
 .dock-pill.active .dock-dot {
@@ -851,37 +861,24 @@ body::after {
   transform: scale(1);
 }
 
-@media (max-width: 480px) {
-  .azura-dock {
-    width: calc(100% - 32px);
-    justify-content: space-around;
-    bottom: 16px;
-    padding: 6px;
-  }
-  .dock-pill {
-    padding: 8px 10px;
-    font-size: 0.55rem;
-  }
-}
-
-/* ── PWA FULLSCREEN & SAFE AREA SUPPORT ── */
-
-html, body {
-  height: calc(var(--vh, 1vh) * 100);
-}
-
-.azura-dock {
-  padding-bottom: max(0px, env(safe-area-inset-bottom));
-}
-
+/* Mobile */
 @media (max-width: 767px) {
   .azura-dock {
-    bottom: 16px;
-    padding: 8px 14px;
-    gap: 6px;
+    bottom: max(16px, env(safe-area-inset-bottom, 0px) + 8px);
     max-width: calc(100vw - 32px);
-    /* ensure dock clears iOS home indicator */
-    bottom: max(16px, env(safe-area-inset-bottom) + 8px);
+    padding: 5px 6px;
   }
-  .dock-pill { padding: 7px 10px; font-size: 11px; }
+  .dock-pill {
+    padding: 7px 13px;
+    font-size: 0.53rem;
+    letter-spacing: 0.13em;
+  }
+}
+
+@media (max-width: 380px) {
+  .dock-pill {
+    padding: 6px 10px;
+    font-size: 0.50rem;
+    letter-spacing: 0.10em;
+  }
 }
