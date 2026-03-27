@@ -10,14 +10,11 @@ const ET = {
   LERP:             0.06,
   BLINK_EAR:        0.22,
   BLINK_DEBOUNCE:   950,
-  // MediaPipe landmark indices for eyes
-  // Left eye: 33,133,160,159,158,144,145,153
-  // Right eye: 362,263,387,386,385,373,374,380
+  // MediaPipe landmark indices
+  L_INNER: 133, L_OUTER: 33, L_TOP: 159, L_BOT: 145, L_IRIS: 468,
+  R_INNER: 362, R_OUTER: 263, R_TOP: 386, R_BOT: 374, R_IRIS: 473,
   LEFT_EYE:  [33,133,160,159,158,144,145,153],
   RIGHT_EYE: [362,263,387,386,385,373,374,380],
-  // Iris centers (MediaPipe 468-point mesh includes iris)
-  LEFT_IRIS:  468,
-  RIGHT_IRIS: 473,
 };
 
 /* ─── STATE ──────────────────────────────────────────────── */
@@ -32,6 +29,64 @@ let fxCanvas = null, fxCtx = null;
 let faceMesh = null;
 let cameraStream = null;
 let isProcessing = false;
+
+// Calibration state
+let isCalibrating = false;
+let curCalPoint = null;
+let calPoints = []; // [{x, y, rawX, rawY}]
+let calLimits = { minX: 0.2, maxX: 0.8, minY: 0.2, maxY: 0.8 };
+
+async function startCalibration() {
+  isCalibrating = true;
+  fxTargetAlpha = ET.OVERLAY_ALPHA;
+  updateStatus('calibrating');
+
+  const points = [
+    { x: 0.15, y: 0.15, label: 'Top Left' },
+    { x: 0.85, y: 0.15, label: 'Top Right' },
+    { x: 0.85, y: 0.85, label: 'Bottom Right' },
+    { x: 0.15, y: 0.85, label: 'Bottom Left' },
+    { x: 0.5, y: 0.5, label: 'Center' }
+  ];
+
+  calPoints = [];
+  for (const p of points) {
+    curCalPoint = { ...p, samples: [] };
+    // Wait for user to focus on the dot
+    await new Promise(r => setTimeout(r, 2000));
+    
+    if (curCalPoint.samples.length > 5) {
+      // Average the last samples for stability
+      const recent = curCalPoint.samples.slice(-15);
+      const avgX = recent.reduce((a, b) => a + b.x, 0) / recent.length;
+      const avgY = recent.reduce((a, b) => a + b.y, 0) / recent.length;
+      calPoints.push({ ...p, rawX: avgX, rawY: avgY });
+    }
+  }
+
+  if (calPoints.length >= 4) {
+    const rawXs = calPoints.map(p => p.rawX);
+    const rawYs = calPoints.map(p => p.rawY);
+    calLimits = {
+      minX: Math.min(...rawXs),
+      maxX: Math.max(...rawXs),
+      minY: Math.min(...rawYs),
+      maxY: Math.max(...rawYs)
+    };
+    // Add some buffer
+    const padX = (calLimits.maxX - calLimits.minX) * 0.05;
+    const padY = (calLimits.maxY - calLimits.minY) * 0.05;
+    calLimits.minX += padX;
+    calLimits.maxX -= padX;
+    calLimits.minY += padY;
+    calLimits.maxY -= padY;
+    console.log('[ET] Calibrated:', calLimits);
+  }
+
+  curCalPoint = null;
+  isCalibrating = false;
+  updateStatus('active');
+}
 
 /* ─── LIBRARY LOADER ─────────────────────────────────────── */
 /*
@@ -213,7 +268,6 @@ function startFrameLoop() {
 /* ─── RESULTS HANDLER ────────────────────────────────────── */
 function onFaceMeshResults(results) {
   if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) {
-    // No face detected
     trackingActive = false;
     fxTargetAlpha = 0;
     updateStatus('searching');
@@ -223,25 +277,36 @@ function onFaceMeshResults(results) {
   trackingActive = true;
   const landmarks = results.multiFaceLandmarks[0];
 
-  // Iris-based gaze (landmarks 468=left iris, 473=right iris)
-  // These are normalized 0..1 in video space
-  const leftIris  = landmarks[ET.LEFT_IRIS];
-  const rightIris = landmarks[ET.RIGHT_IRIS];
+  const getRel = (iris, p1, p2, top, bot) => {
+    const minX = Math.min(p1.x, p2.x);
+    const maxX = Math.max(p1.x, p2.x);
+    const minY = Math.min(top.y, bot.y);
+    const maxY = Math.max(top.y, bot.y);
+    return {
+      x: (iris.x - minX) / (maxX - minX || 0.01),
+      y: (iris.y - minY) / (maxY - minY || 0.01)
+    };
+  };
 
-  if (leftIris && rightIris) {
-    // Average iris position — mirrored for front camera
-    const rawX = 1 - ((leftIris.x + rightIris.x) / 2);
-    const rawY = (leftIris.y + rightIris.y) / 2;
+  const lG = getRel(landmarks[ET.L_IRIS], landmarks[ET.L_INNER], landmarks[ET.L_OUTER], landmarks[ET.L_TOP], landmarks[ET.L_BOT]);
+  const rG = getRel(landmarks[ET.R_IRIS], landmarks[ET.R_INNER], landmarks[ET.R_OUTER], landmarks[ET.R_TOP], landmarks[ET.R_BOT]);
 
-    // Amplify: head/iris doesn't move full 0-1 range normally
-    const gazeX = Math.max(0, Math.min(1, 0.5 + (rawX - 0.5) * 2.8));
-    const gazeY = Math.max(0, Math.min(1, 0.5 + (rawY - 0.5) * 2.4));
+  const rawX = (lG.x + rG.x) / 2;
+  const rawY = (lG.y + rG.y) / 2;
 
-    smoothX += (gazeX - smoothX) * ET.LERP;
-    smoothY += (gazeY - smoothY) * ET.LERP;
+  if (isCalibrating && curCalPoint) {
+    curCalPoint.samples.push({ x: rawX, y: rawY });
   }
 
-  // Blink detection using EAR on landmarks
+  let gazeX = (rawX - calLimits.minX) / (calLimits.maxX - calLimits.minX || 0.01);
+  let gazeY = (rawY - calLimits.minY) / (calLimits.maxY - calLimits.minY || 0.01);
+
+  gazeX = Math.max(0, Math.min(1, gazeX));
+  gazeY = Math.max(0, Math.min(1, gazeY));
+
+  smoothX += (gazeX - smoothX) * ET.LERP;
+  smoothY += (gazeY - smoothY) * ET.LERP;
+
   const leftEAR  = getEAR(landmarks, ET.LEFT_EYE);
   const rightEAR = getEAR(landmarks, ET.RIGHT_EYE);
   const avgEAR   = (leftEAR + rightEAR) / 2;
@@ -304,6 +369,29 @@ function drawFX() {
   if (Math.abs(fxAlpha - fxTargetAlpha) < 0.001) fxAlpha = fxTargetAlpha;
 
   fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+
+  // Calibration overlay
+  if (isCalibrating && curCalPoint) {
+    const cx = curCalPoint.x * window.innerWidth;
+    const cy = curCalPoint.y * window.innerHeight;
+    fxCtx.save();
+    // Pulse animation
+    const pulse = 1 + Math.sin(Date.now() / 200) * 0.2;
+    fxCtx.beginPath();
+    fxCtx.arc(cx, cy, 12 * pulse, 0, Math.PI * 2);
+    fxCtx.fillStyle = 'rgba(214,167,122,0.8)';
+    fxCtx.shadowBlur = 20;
+    fxCtx.shadowColor = '#D6A77A';
+    fxCtx.fill();
+    
+    fxCtx.font = '12px DM Mono';
+    fxCtx.fillStyle = '#F3E2D0';
+    fxCtx.textAlign = 'center';
+    fxCtx.fillText('FOCUS HERE', cx, cy + 30);
+    fxCtx.restore();
+    return; // Don't draw normal FX during calibration
+  }
+
   if (fxAlpha < 0.005) return;
 
   const px = smoothX * window.innerWidth;
@@ -401,12 +489,13 @@ function updateStatus(state) {
   const sta = document.getElementById('et-status');
   if (!pip || !lbl || !sta) return;
   const map = {
-    init:      ['rgba(214,167,122,0.3)',  'Eye Track · Init',      false],
-    loading:   ['rgba(214,167,122,0.5)',  'Eye Track · Loading',   true ],
-    active:    ['rgba(214,167,122,0.9)',  'Eye Track · On',        false],
-    paused:    ['rgba(214,167,122,0.5)',  'Eye Track · Paused',    true ],
-    searching: ['rgba(214,167,122,0.25)', 'Eye Track · Searching', false],
-    error:     ['rgba(255,80,80,0.6)',    'Eye Track · Error',     false],
+    init:         ['rgba(214,167,122,0.3)',  'Eye Track · Init',         false],
+    loading:      ['rgba(214,167,122,0.5)',  'Eye Track · Loading',      true ],
+    calibrating:  ['rgba(214,167,122,0.95)', 'Eye Track · Calibrating',  true ],
+    active:       ['rgba(214,167,122,0.9)',  'Eye Track · On',           false],
+    paused:       ['rgba(214,167,122,0.5)',  'Eye Track · Paused',       true ],
+    searching:    ['rgba(214,167,122,0.25)', 'Eye Track · Searching',    false],
+    error:        ['rgba(255,80,80,0.6)',    'Eye Track · Error',        false],
   };
   const [color, text, pulse] = map[state] || map.init;
   pip.style.background = color;
@@ -500,7 +589,9 @@ function showPermissionToast() {
 
         // STEP 4: Start processing
         startFrameLoop();
-        updateStatus('active');
+        
+        // STEP 5: Calibrate
+        await startCalibration();
 
       } catch (err) {
         console.error('[ET] Init failed at step:', err.message || err);
