@@ -481,4 +481,111 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', setVH);
     window.addEventListener('orientationchange', setVH);
   })();
+
+  // ── PWA INSTALL PROMPT ──
+  (function() {
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+
+    // iOS --vh fix (Safari collapses viewport with address bar)
+    function setVH() {
+      document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+    }
+    setVH();
+    window.addEventListener('resize', setVH);
+    window.addEventListener('orientationchange', () => setTimeout(setVH, 150));
+
+    // Detect if already running as PWA (fullscreen/standalone)
+    const isStandalone = window.matchMedia('(display-mode: fullscreen)').matches
+                      || window.matchMedia('(display-mode: standalone)').matches
+                      || window.navigator.standalone === true;
+
+    if (isStandalone) return; // Already fullscreen, nothing to show
+
+    // Only show on mobile
+    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (!isMobileDevice) return;
+
+    // Build install banner
+    const banner = document.createElement('div');
+    banner.id = 'pwa-banner';
+    banner.innerHTML = `
+      <div class="pwa-inner">
+        <div class="pwa-icon">⬇</div>
+        <div class="pwa-text">
+          <div class="pwa-title">Add to Home Screen</div>
+          <div class="pwa-sub">Launch fullscreen — no browser bars</div>
+        </div>
+        <button class="pwa-btn" id="pwa-install-btn">Install</button>
+        <button class="pwa-dismiss" id="pwa-dismiss-btn" aria-label="Dismiss">✕</button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+
+    const installBtn = document.getElementById('pwa-install-btn');
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
+
+    // Dismiss: hide for this session
+    dismissBtn.addEventListener('click', () => {
+      banner.classList.remove('pwa-visible');
+      sessionStorage.setItem('pwa-dismissed', '1');
+    });
+
+    // Android Chrome: capture beforeinstallprompt
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      if (!sessionStorage.getItem('pwa-dismissed')) {
+        setTimeout(() => banner.classList.add('pwa-visible'), 2500);
+      }
+    });
+
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        // Android: trigger native install dialog
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          banner.classList.remove('pwa-visible');
+        });
+      } else {
+        // iOS: no API available, show manual instructions
+        const iosMsg = document.getElementById('pwa-ios-msg');
+        if (iosMsg) iosMsg.classList.add('pwa-ios-visible');
+      }
+    });
+
+    // iOS fallback instruction bubble
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS && !sessionStorage.getItem('pwa-dismissed')) {
+      // Show iOS-specific instructions since beforeinstallprompt never fires on iOS
+      const iosBubble = document.createElement('div');
+      iosBubble.id = 'pwa-ios-msg';
+      iosBubble.innerHTML = `
+        <div class="ios-arrow">▼</div>
+        <div class="ios-steps">
+          Tap <strong>Share ↑</strong> then<br/>
+          <strong>"Add to Home Screen"</strong><br/>
+          for fullscreen experience
+        </div>
+        <button id="pwa-ios-close">Got it</button>
+      `;
+      document.body.appendChild(iosBubble);
+      document.getElementById('pwa-ios-close').addEventListener('click', () => {
+        iosBubble.remove();
+        sessionStorage.setItem('pwa-dismissed', '1');
+      });
+      // Show after 3s
+      setTimeout(() => {
+        if (!sessionStorage.getItem('pwa-dismissed')) {
+          banner.classList.add('pwa-visible');
+          iosBubble.classList.add('pwa-ios-visible');
+        }
+      }, 3000);
+    }
+  })();
 });
