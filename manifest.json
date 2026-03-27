@@ -1,0 +1,10 @@
+{
+  "name": "Azura 2K26",
+  "short_name": "Azura",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#1A1410",
+  "theme_color": "#1A1410",
+  "start_url": ".",
+  "icons": []
+}

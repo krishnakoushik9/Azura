@@ -1,351 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AZURA 2K26 | CSE (AI & ML) | CMR College</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --bg:       #1A1410;
-    --bg2:      #1F1915;
-    --primary:  #D6A77A;
-    --accent:   #F3E2D0;
-    --secondary:#8C6A4F;
-    --muted:    rgba(243,226,208,0.38);
-    --border:   rgba(214,167,122,0.13);
-    --surface:  rgba(214,167,122,0.04);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--accent);
-    font-family: 'Outfit', sans-serif;
-    overflow-x: hidden;
-    user-select: none;
-  }
-
-  /* ─ Layers ─ */
-  #tubes-canvas {
-    position: fixed; inset: 0;
-    width: 100%; height: 100%;
-    z-index: 0; display: block;
-  }
-  #sq-canvas {
-    position: fixed; inset: 0;
-    width: 100%; height: 100%;
-    z-index: 1; pointer-events: none;
-    opacity: 0.5;
-  }
-  .vignette {
-    position: fixed; inset: 0; z-index: 2; pointer-events: none;
-    background: radial-gradient(ellipse at center,
-      transparent 0%, rgba(26,20,16,0.5) 60%, rgba(26,20,16,0.95) 100%);
-  }
-  .content { position: relative; z-index: 10; }
-
-  /* ─ Hero ─ */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; padding: 2rem; position: relative;
-  }
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem; letter-spacing: 0.34em;
-    color: var(--secondary); text-transform: uppercase;
-    margin-bottom: 2.5rem;
-    animation: fadeUp 1s ease both;
-  }
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(5rem, 16vw, 13rem);
-    font-weight: 300; line-height: 0.88;
-    color: var(--accent);
-    animation: fadeUp 1s 0.14s ease both;
-  }
-  .hero-title em { font-style: italic; color: var(--primary); }
-  .hero-year {
-    font-family: 'DM Mono', monospace;
-    font-size: clamp(0.75rem, 2vw, 1.05rem);
-    letter-spacing: 0.7em; color: var(--secondary);
-    margin-top: 1.2rem;
-    animation: fadeUp 1s 0.26s ease both;
-  }
-  .hero-rule {
-    width: 1px; height: 72px;
-    background: linear-gradient(to bottom, transparent, var(--primary), transparent);
-    margin: 2.5rem auto;
-    animation: fadeIn 1.4s 0.5s ease both;
-  }
-  .hero-sub {
-    font-size: 0.8rem; letter-spacing: 0.06em;
-    color: var(--muted); line-height: 1.75; max-width: 340px;
-    animation: fadeIn 1s 0.6s ease both;
-  }
-  .hero-pills {
-    display: flex; gap: 0.8rem; margin-top: 2.4rem;
-    flex-wrap: wrap; justify-content: center;
-    animation: fadeIn 1s 0.8s ease both;
-  }
-  .pill {
-    padding: 0.42rem 1.05rem;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    background: var(--surface);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.58rem; letter-spacing: 0.14em;
-    color: var(--primary); backdrop-filter: blur(8px);
-    display: flex; align-items: center; gap: 0.45em;
-  }
-  .pill-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--primary);
-    animation: breathe 2s infinite;
-  }
-  .scroll-hint {
-    position: absolute; bottom: 2rem;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 0.6rem;
-    color: var(--muted); font-family: 'DM Mono', monospace;
-    font-size: 0.52rem; letter-spacing: 0.22em; text-transform: uppercase;
-    animation: fadeIn 2s 1.4s ease both;
-  }
-  .scroll-track {
-    width: 1px; height: 44px;
-    background: var(--border); position: relative; overflow: hidden;
-  }
-  .scroll-track::after {
-    content: ''; position: absolute; top: -100%; left: 0;
-    width: 100%; height: 50%;
-    background: linear-gradient(to bottom, transparent, var(--primary));
-    animation: scrollLine 2s infinite ease;
-  }
-
-  /* ─ Sections ─ */
-  section {
-    padding: 7rem 2rem;
-    max-width: 1060px; margin: 0 auto;
-  }
-  .tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.57rem; letter-spacing: 0.28em;
-    color: var(--secondary); text-transform: uppercase;
-    display: flex; align-items: center; gap: 0.8rem;
-    margin-bottom: 0.75rem;
-  }
-  .tag::before { content: ''; width: 26px; height: 1px; background: var(--secondary); }
-  .sec-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 300; color: var(--accent);
-    line-height: 1.08; margin-bottom: 3.5rem;
-  }
-  .sec-title em { font-style: italic; color: var(--primary); }
-
-  /* ─ Events ─ */
-  .events-block { margin-bottom: 3rem; }
-  .block-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.57rem; letter-spacing: 0.2em;
-    color: var(--secondary); text-transform: uppercase;
-    margin-bottom: 1rem; padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 1px; background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden;
-  }
-  .ev-card {
-    background: var(--bg); padding: 1.75rem 1.4rem;
-    position: relative; overflow: hidden;
-    transition: background 0.3s;
-  }
-  .ev-card::after {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    transform: scaleX(0); transition: transform 0.35s ease;
-    transform-origin: left;
-  }
-  .ev-card:hover { background: var(--surface); }
-  .ev-card:hover::after { transform: scaleX(1); }
-  .ev-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.53rem; letter-spacing: 0.18em;
-    color: var(--secondary); margin-bottom: 1.1rem;
-  }
-  .ev-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.18rem; font-weight: 400;
-    color: var(--accent); line-height: 1.2; margin-bottom: 0.25rem;
-  }
-  .ev-desc {
-    font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em;
-  }
-
-  /* ─ Stats ─ */
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1px; background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden;
-    margin: 0 auto 7rem; max-width: 1060px;
-  }
-  .stat-cell { background: var(--bg); padding: 2rem 1.4rem; text-align: center; }
-  .stat-val {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.1rem; font-weight: 300;
-    color: var(--primary); line-height: 1; margin-bottom: 0.35rem;
-  }
-  .stat-lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.52rem; letter-spacing: 0.16em;
-    color: var(--muted); text-transform: uppercase;
-  }
-
-  /* ─ Prize ─ */
-  .prize-banner {
-    border: 1px solid var(--border);
-    border-radius: 18px; background: var(--surface);
-    padding: 3.5rem 2rem; text-align: center;
-    margin: 0 2rem 7rem; max-width: 1060px;
-    margin-left: auto; margin-right: auto;
-    backdrop-filter: blur(12px); position: relative; overflow: hidden;
-  }
-  .prize-banner::before {
-    content: ''; position: absolute;
-    top: -80px; left: 50%; transform: translateX(-50%);
-    width: 400px; height: 250px;
-    background: radial-gradient(ellipse, rgba(214,167,122,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .prize-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.56rem; letter-spacing: 0.28em;
-    color: var(--secondary); text-transform: uppercase; margin-bottom: 0.9rem;
-  }
-  .prize-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.5rem, 4vw, 2.7rem);
-    font-weight: 300; color: var(--accent);
-  }
-  .prize-text em { font-style: italic; color: var(--primary); }
-  .prize-sub {
-    margin-top: 0.75rem; font-size: 0.75rem;
-    color: var(--muted); letter-spacing: 0.04em;
-  }
-
-  /* ─ Team ─ */
-  .tc-phone a {
-      color: #e6c7a1;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AZURA 2K26 | CSE (AI & ML) | CMR College</title>
     
-    .tc-phone a:hover {
-      color: #ffffff;
-      text-shadow: 0 0 6px rgba(230, 199, 161, 0.6);
-    }
-  .team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
-    gap: 1.2rem;
-  }
-  .team-card {
-    border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden;
-    background: var(--surface); backdrop-filter: blur(10px);
-  }
-  .tc-head {
-    padding: 0.85rem 1.35rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 0.55rem;
-  }
-  .tc-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--primary);
-    box-shadow: 0 0 5px var(--primary); flex-shrink: 0;
-  }
-  .tc-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.55rem; letter-spacing: 0.18em;
-    color: var(--secondary); text-transform: uppercase;
-  }
-  .tc-member {
-    padding: 0.95rem 1.35rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between;
-    align-items: center; gap: 1rem;
-  }
-  .tc-member:last-child { border-bottom: none; }
-  .tc-name { font-size: 0.88rem; font-weight: 400; color: var(--accent); }
-  .tc-role {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.52rem; letter-spacing: 0.1em;
-    color: var(--muted); text-transform: uppercase; margin-top: 2px;
-  }
-  .tc-phone {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem; color: var(--primary); white-space: nowrap; flex-shrink: 0;
-  }
+    <!-- PWA Fullscreen Support -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Azura 2K26">
+    <meta name="theme-color" content="#1A1410">
+    <link rel="manifest" href="manifest.json">
 
-  /* ─ Footer ─ */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 3rem 2rem; text-align: center; z-index: 10; position: relative;
-  }
-  .ft-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.75rem; font-weight: 300;
-    color: var(--primary); margin-bottom: 0.6rem;
-  }
-  .ft-meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.52rem; letter-spacing: 0.16em;
-    color: var(--muted); text-transform: uppercase; line-height: 2;
-  }
-
-  /* ─ Keyframes ─ */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(26px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; } to { opacity: 1; }
-  }
-  @keyframes breathe {
-    0%,100% { opacity:1; transform:scale(1); }
-    50%      { opacity:0.3; transform:scale(0.65); }
-  }
-  @keyframes scrollLine {
-    0%   { top: -100%; }
-    100% { top:  200%; }
-  }
-
-  /* faint scanlines */
-  body::after {
-    content: ''; position: fixed; inset: 0;
-    background: repeating-linear-gradient(
-      0deg, transparent, transparent 3px,
-      rgba(0,0,0,0.016) 3px, rgba(0,0,0,0.016) 4px
-    );
-    pointer-events: none; z-index: 6;
-  }
-
-  @media(max-width:600px){
-    section { padding: 4.5rem 1.2rem; }
-    .stats-bar { padding: 0; }
-    .prize-banner { margin: 0 1.2rem 5rem; }
-  }
-</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -385,21 +57,68 @@
     <div class="events-block">
       <div class="block-label">Technical Events</div>
       <div class="events-grid">
-        <div class="ev-card"><div class="ev-num">T — 01</div><div class="ev-name">Paper Presentation</div><div class="ev-desc">Research &amp; Innovation</div></div>
-        <div class="ev-card"><div class="ev-num">T — 02</div><div class="ev-name">Poster Presentation</div><div class="ev-desc">Visual Communication</div></div>
-        <div class="ev-card"><div class="ev-num">T — 03</div><div class="ev-name">Project Expo</div><div class="ev-desc">Build &amp; Showcase</div></div>
-        <div class="ev-card"><div class="ev-num">T — 04</div><div class="ev-name">Vibe Coding Contest</div><div class="ev-desc">Code Under Pressure</div></div>
+        <div class="ev-card" data-event="paper" data-type="form"><div class="ev-num">T — 01</div><div class="ev-name">Paper Presentation</div><div class="ev-desc">Research &amp; Innovation</div></div>
+        <div class="ev-card" data-event="poster" data-type="form"><div class="ev-num">T — 02</div><div class="ev-name">Poster Presentation</div><div class="ev-desc">Visual Communication</div></div>
+        <div class="ev-card" data-event="expo" data-type="form"><div class="ev-num">T — 03</div><div class="ev-name">Project Expo</div><div class="ev-desc">Build &amp; Showcase</div></div>
+        <div class="ev-card" data-event="vibe" data-type="soon"><div class="ev-num">T — 04</div><div class="ev-name">Vibe Coding Contest</div><div class="ev-desc">Code Under Pressure</div></div>
       </div>
     </div>
 
     <div class="events-block">
       <div class="block-label">Non-Technical Events</div>
       <div class="events-grid">
-        <div class="ev-card"><div class="ev-num">N — 04</div><div class="ev-name">Freefire Tournament</div><div class="ev-desc">Battle Royale</div></div>
-        <div class="ev-card"><div class="ev-num">N — 01</div><div class="ev-name">IPL Auction</div><div class="ev-desc">Strategy &amp; Bidding</div></div>
-        <div class="ev-card"><div class="ev-num">N — 02</div><div class="ev-name">Smash Karts</div><div class="ev-desc">Racing &amp; Combat</div></div>
-        <div class="ev-card"><div class="ev-num">N — 03</div><div class="ev-name">Pictogram Puzzles</div><div class="ev-desc">Visual Wit</div></div>
+        <div class="ev-card" data-event="freefire" data-type="freefire"><div class="ev-num">N — 04</div><div class="ev-name">Freefire Tournament</div><div class="ev-desc">Battle Royale</div></div>
+        <div class="ev-card" data-event="ipl" data-type="soon"><div class="ev-num">N — 01</div><div class="ev-name">IPL Auction</div><div class="ev-desc">Strategy &amp; Bidding</div></div>
+        <div class="ev-card" data-event="smash" data-type="soon"><div class="ev-num">N — 02</div><div class="ev-name">Smash Karts</div><div class="ev-desc">Racing &amp; Combat</div></div>
+        <div class="ev-card" data-event="pictogram" data-type="soon"><div class="ev-num">N — 03</div><div class="ev-name">Pictogram Puzzles</div><div class="ev-desc">Visual Wit</div></div>
       </div>
+    </div>
+  </section>
+
+  <section class="venue-section">
+    <div class="tag">03 &nbsp; Location</div>
+    <div class="sec-title">The <em>Venue</em></div>
+  
+    <div class="venue-grid">
+  
+      <!-- LEFT: Info Card -->
+      <div class="venue-card">
+        <div class="venue-badge">CMRCET CAMPUS</div>
+        <h3 class="venue-name">CMR College of Engineering &amp; Technology</h3>
+        <p class="venue-address">
+          Kandlakoya, Medchal Road<br/>
+          Hyderabad, Telangana 501401
+        </p>
+        <div class="venue-features">
+          <div class="venue-feat"><span>🌿</span> 10-Acre Green Campus</div>
+          <div class="venue-feat"><span>🎭</span> 2200-Seat Auditorium</div>
+          <div class="venue-feat"><span>🚗</span> Ample Parking Space</div>
+          <div class="venue-feat"><span>☕</span> On-Campus Canteen</div>
+        </div>
+        <a 
+          href="https://maps.google.com/?q=CMR+College+of+Engineering+and+Technology+Hyderabad"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="venue-btn"
+        >
+          Get Directions ↗
+        </a>
+      </div>
+  
+      <!-- RIGHT: Google Maps Embed -->
+      <div class="venue-map">
+        <iframe
+          src="https://maps.google.com/maps?q=CMR+College+of+Engineering+and+Technology+Kandlakoya+Hyderabad&output=embed&z=15"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="CMR College of Engineering & Technology Location">
+        </iframe>
+      </div>
+  
     </div>
   </section>
 
@@ -482,65 +201,76 @@
   </footer>
 </div>
 
-<!-- ══ THREE.JS TUBES — real simulation ══ -->
+<div id="reg-modal" class="modal-overlay" aria-hidden="true">
+  <div class="modal-box">
+    <button class="modal-close" id="reg-close" aria-label="Close">✕</button>
+    <div class="modal-tag" id="reg-event-name"></div>
+    <h2 class="modal-title">Register</h2>
+    <p class="modal-sub">Fill in your details to proceed to the payment form.</p>
 
+    <div class="modal-form" id="reg-form-area">
+      <div class="modal-field">
+        <label class="modal-label">Full Name</label>
+        <input type="text" id="reg-name" class="modal-input" 
+               placeholder="Your full name" autocomplete="name"/>
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Roll Number</label>
+        <input type="text" id="reg-roll" class="modal-input" 
+               placeholder="e.g. 22BD1A05XX" autocomplete="off"/>
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Mobile Number</label>
+        <input type="tel" id="reg-mobile" class="modal-input" 
+               placeholder="10-digit mobile number" autocomplete="tel"/>
+      </div>
+      <button class="modal-submit" id="reg-submit">
+        Proceed to Form ↗
+      </button>
+      <p class="modal-note" id="reg-error" style="color:#ff6b6b;display:none;">
+        Please fill all fields correctly.
+      </p>
+    </div>
 
-<!-- Squares + Security (classic script) -->
-<script>
-// ── SECURITY ──
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-  if (e.key === 'F12') { e.preventDefault(); return false; }
-  if (e.ctrlKey && e.shiftKey && 'IJCKijck'.includes(e.key)) { e.preventDefault(); return false; }
-  if (e.ctrlKey && 'uUsS'.includes(e.key)) { e.preventDefault(); return false; }
-  if (e.metaKey && e.altKey && 'iI'.includes(e.key)) { e.preventDefault(); return false; }
-});
-(function() {
-  const t = 160;
-  setInterval(() => {
-    if (window.outerWidth - window.innerWidth > t || window.outerHeight - window.innerHeight > t) {
-      document.body.innerHTML = '<div style="display:flex;height:100vh;align-items:center;justify-content:center;font-family:monospace;color:#D6A77A;background:#1A1410;letter-spacing:.25em;">ACCESS RESTRICTED</div>';
-    }
-  }, 900);
-})();
+    <div class="modal-soon" id="reg-soon-area" style="display:none;">
+      <div class="modal-soon-icon">⏳</div>
+      <p class="modal-soon-text">Registration link for this event will be announced soon. Stay tuned!</p>
+      <button class="modal-close-btn" id="reg-soon-close">Got it</button>
+    </div>
+  </div>
+</div>
 
-// ── SQUARES ──
-(function() {
-  const canvas = document.getElementById('sq-canvas');
-  const ctx = canvas.getContext('2d');
-  const SZ = 46;
-  let W, H;
-  const off = { x: 0, y: 0 };
-  let mx = -9999, my = -9999;
+<div id="ff-overlay" class="ff-overlay" aria-hidden="true">
+  <div class="ff-popup">
+    <button class="ff-close" id="ff-close" aria-label="Close">✕</button>
+    <div class="ff-img-wrap">
+      <img 
+        src="Pop-ups/Vamshi-EventFreeFire.jpg" 
+        alt="Free Fire Tournament - Azura 2K26"
+        class="ff-img"
+        loading="lazy"
+      />
+    </div>
+    <div class="ff-footer">
+      <a 
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdbpPa8yS6A-j6nY6R_9-Fg0Y4tHrIDDj5qNAeGNYaRo5EK-g/viewform?usp=header"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="ff-register-btn"
+        id="ff-register"
+      >
+        Register Now ↗
+      </a>
+    </div>
+  </div>
+</div>
 
-  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
-  resize();
-  addEventListener('resize', resize);
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+<!-- Hidden audio element -->
+<audio id="ff-audio" preload="none">
+  <source src="Pop-ups/07.%20Free%20Fire%20-%20Let%20the%20Battle%20Begin.mp3" 
+          type="audio/mpeg"/>
+</audio>
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    const ox = off.x % SZ, oy = off.y % SZ;
-    const cols = Math.ceil(W / SZ) + 2, rows = Math.ceil(H / SZ) + 2;
-    for (let c = -1; c < cols; c++) {
-      for (let r = -1; r < rows; r++) {
-        const sx = c * SZ - ox, sy = r * SZ - oy;
-        const gx = Math.floor((mx + ox) / SZ);
-        const gy = Math.floor((my + oy) / SZ);
-        if (c === gx && r === gy) {
-          ctx.fillStyle = 'rgba(214,167,122,0.09)';
-          ctx.fillRect(sx, sy, SZ, SZ);
-        }
-        ctx.strokeStyle = 'rgba(214,167,122,0.07)';
-        ctx.lineWidth = 0.5;
-        ctx.strokeRect(sx, sy, SZ, SZ);
-      }
-    }
-    off.x += 0.26; off.y += 0.26;
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-</script>
+<script type="text/javascript" src="script.js"></script>
 </body>
 </html>
