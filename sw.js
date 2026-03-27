@@ -1,4 +1,4 @@
-const CACHE = 'azura-v3';
+const CACHE = 'azura-v4';
 const ASSETS = [
   './',
   './index.html',
