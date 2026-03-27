@@ -653,7 +653,13 @@ window.addEventListener('load', () => {
     return;
   }
 
-  // Performance gate
+  // Performance & Mobile gate
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent);
+  if (isMobile) {
+    console.warn('[ET] Mobile detected, disabling eye track');
+    return;
+  }
+
   if (navigator.deviceMemory && navigator.deviceMemory < 2) {
     console.warn('[ET] Low memory device, skipping eye track');
     return;
