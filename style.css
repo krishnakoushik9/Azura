@@ -883,7 +883,5 @@ html, body {
     /* ensure dock clears iOS home indicator */
     bottom: max(16px, env(safe-area-inset-bottom) + 8px);
   }
-  /* Updated to target .dock-pill since that is the actual class used in JS injection */
-  .dock-pill span.pill-label { display: none; }
   .dock-pill { padding: 7px 10px; font-size: 11px; }
 }

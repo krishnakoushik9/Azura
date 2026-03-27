@@ -480,18 +480,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setVH();
     window.addEventListener('resize', setVH);
     window.addEventListener('orientationchange', setVH);
-
-    // 3. Dock Pill Mobile Enhancements (Icons)
-    // Map labels to icons for mobile view
-    const icons = { 'Home': '🏠', 'Events': '🔥', 'Venue': '📍', 'Team': '🤝' };
-    
-    // Slight delay to ensure previous dock injection IIFE finished
-    setTimeout(() => {
-      document.querySelectorAll('.dock-pill').forEach(pill => {
-        const originalText = pill.childNodes[0].textContent.trim();
-        const icon = icons[originalText] || '';
-        pill.innerHTML = `<span class="pill-icon">${icon}</span><span class="pill-label">${originalText}</span><div class="dock-dot"></div>`;
-      });
-    }, 100);
   })();
 });
