@@ -594,4 +594,105 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 3000);
     }
   })();
+
+  // ── CONTACT POPUP ──
+  (function() {
+    // Build popup DOM
+    const popup = document.createElement('div');
+    popup.id = 'contact-popup';
+    popup.setAttribute('aria-hidden', 'true');
+    popup.innerHTML = `
+      <div class="cp-box">
+        <div class="cp-name" id="cp-name"></div>
+        <div class="cp-actions">
+          <button class="cp-btn cp-call" id="cp-call">
+            <span class="cp-icon">📞</span>
+            <span class="cp-label">Call</span>
+          </button>
+          <button class="cp-btn cp-wa" id="cp-wa">
+            <span class="cp-icon">💬</span>
+            <span class="cp-label">WhatsApp</span>
+          </button>
+        </div>
+        <button class="cp-close" id="cp-close" aria-label="Close">✕</button>
+      </div>
+    `;
+    document.body.appendChild(popup);
+
+    const cpName  = document.getElementById('cp-name');
+    const cpCall  = document.getElementById('cp-call');
+    const cpWa    = document.getElementById('cp-wa');
+    const cpClose = document.getElementById('cp-close');
+
+    let currentPhone = '';
+    let currentWa    = '';
+
+    function openPopup(phone, wa, name, gender) {
+      currentPhone = phone;
+      currentWa    = wa;
+
+      // Greeting: add "Sister" suffix for female contacts
+      const greeting = gender === 'female'
+        ? `Hello ${name} Sister`
+        : `Hello ${name}`;
+
+      cpName.textContent = name + (gender === 'female' ? ' 👩' : ' 👤');
+      cpCall.dataset.greeting = greeting; // store for reference
+      cpWa.dataset.greeting   = greeting;
+      cpWa.dataset.wa         = wa;
+
+      popup.classList.add('cp-visible');
+      popup.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePopup() {
+      popup.classList.remove('cp-visible');
+      popup.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    // Call button: open dialer + copy to clipboard
+    cpCall.addEventListener('click', () => {
+      // Copy number to clipboard silently
+      try {
+        navigator.clipboard.writeText(currentPhone).catch(() => {});
+      } catch(e) {}
+      // Open dialer
+      window.location.href = 'tel:+91' + currentPhone;
+      closePopup();
+    });
+
+    // WhatsApp button: open wa.me with preloaded greeting
+    cpWa.addEventListener('click', () => {
+      const greeting = encodeURIComponent(cpWa.dataset.greeting);
+      const waNum    = cpWa.dataset.wa;
+      window.open('https://wa.me/' + waNum + '?text=' + greeting, '_blank');
+      closePopup();
+    });
+
+    cpClose.addEventListener('click', closePopup);
+
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) closePopup();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popup.classList.contains('cp-visible')) {
+        closePopup();
+      }
+    });
+
+    // Attach triggers to all .contact-trigger spans
+    document.querySelectorAll('.contact-trigger').forEach(span => {
+      span.addEventListener('click', () => {
+        openPopup(
+          span.dataset.phone,
+          span.dataset.wa,
+          span.dataset.name,
+          span.dataset.gender
+        );
+      });
+    });
+  })();
 });

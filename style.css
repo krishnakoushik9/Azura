@@ -1030,3 +1030,159 @@ html, body {
   letter-spacing: 0.12em;
   cursor: pointer;
 }
+
+/* ── Contact Trigger Styling ── */
+.contact-trigger {
+  cursor: pointer;
+  color: var(--primary);
+  border-bottom: 1px dotted rgba(214, 167, 122, 0.4);
+  transition: color 0.2s, border-color 0.2s;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+}
+
+.contact-trigger:hover,
+.contact-trigger:active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Contact Popup ── */
+#contact-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(26, 20, 16, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#contact-popup.cp-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.cp-box {
+  background: #1F1915;
+  border: 1px solid rgba(214, 167, 122, 0.20);
+  border-radius: 24px 24px 16px 16px;
+  padding: 28px 24px 24px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  transform: translateY(40px);
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
+}
+
+#contact-popup.cp-visible .cp-box {
+  transform: translateY(0);
+}
+
+.cp-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+
+.cp-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.cp-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  font-family: 'DM Mono', monospace;
+}
+
+.cp-btn:active {
+  transform: scale(0.96);
+}
+
+.cp-call {
+  border-color: rgba(100, 200, 120, 0.25);
+}
+
+.cp-call:hover {
+  background: rgba(100, 200, 120, 0.08);
+  border-color: rgba(100, 200, 120, 0.45);
+}
+
+.cp-wa {
+  border-color: rgba(37, 211, 102, 0.25);
+}
+
+.cp-wa:hover {
+  background: rgba(37, 211, 102, 0.08);
+  border-color: rgba(37, 211, 102, 0.45);
+}
+
+.cp-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.cp-label {
+  font-size: 0.60rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cp-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.cp-close:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Slides up from bottom on mobile, centered on desktop */
+@media (min-width: 480px) {
+  #contact-popup {
+    align-items: center;
+    padding-bottom: 0;
+  }
+  .cp-box {
+    border-radius: 20px;
+    max-width: 360px;
+  }
+}
