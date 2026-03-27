@@ -7,7 +7,7 @@ const ET = {
   SPOT_INNER:       window.innerWidth < 768 ? 140 : 210,
   SPOT_OUTER:       window.innerWidth < 768 ? 310 : 480,
   OVERLAY_ALPHA:    0.44,
-  LERP:             0.06,
+  LERP:             0.04,
   BLINK_EAR:        0.22,
   BLINK_DEBOUNCE:   950,
   // MediaPipe landmark indices
@@ -301,8 +301,9 @@ function onFaceMeshResults(results) {
   let gazeX = (rawX - calLimits.minX) / (calLimits.maxX - calLimits.minX || 0.01);
   let gazeY = (rawY - calLimits.minY) / (calLimits.maxY - calLimits.minY || 0.01);
 
-  gazeX = Math.max(0, Math.min(1, gazeX));
-  gazeY = Math.max(0, Math.min(1, gazeY));
+  // Fix mirroring and vertical inversion
+  gazeX = 1 - Math.max(0, Math.min(1, gazeX));
+  gazeY = 1 - Math.max(0, Math.min(1, gazeY));
 
   smoothX += (gazeX - smoothX) * ET.LERP;
   smoothY += (gazeY - smoothY) * ET.LERP;
