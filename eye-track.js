@@ -369,19 +369,34 @@ function showPermissionToast() {
     document.body.appendChild(toast);
     setTimeout(() => toast.style.transform = 'translateX(-50%) translateY(0)', 100);
 
-    document.getElementById('et-enable').onclick = async () => {
+    document.getElementById('et-enable').onclick = async (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      // 1. Remove toast and update status
       toast.remove();
       updateStatus('init');
+
       try {
+        // 2. Prime Camera Permission IMMEDIATELY on user gesture
+        // Some browsers require the camera request to be in the same event loop.
+        // We request a basic stream just to trigger the permission dialog.
+        const primeStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        // Immediately stop it to release the hardware for the real init later
+        primeStream.getTracks().forEach(track => track.stop());
+
+        // 3. Now load library and models (since we have permission primed)
         await loadFaceAPI();
         await loadModels();
+
+        // 4. Start the real camera with config
         await startCamera();
       } catch (e) {
+        console.error('[ET] Enable failed:', e);
         updateStatus('error');
       }
     };
 
-    document.getElementById('et-no').onclick = () => {
+    document.getElementById('et-no').onclick = (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
       sessionStorage.setItem('et-declined', '1');
       toast.remove();
     };
