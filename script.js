@@ -486,7 +486,9 @@ document.addEventListener('DOMContentLoaded', () => {
   (function() {
     // Register service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('[PWA] ServiceWorker registered', reg.scope))
+        .catch(err => console.error('[PWA] ServiceWorker failed', err));
     }
 
     // iOS --vh fix (Safari collapses viewport with address bar)
@@ -502,11 +504,8 @@ document.addEventListener('DOMContentLoaded', () => {
                       || window.matchMedia('(display-mode: standalone)').matches
                       || window.navigator.standalone === true;
 
+    console.log('[PWA] Standalone status:', isStandalone);
     if (isStandalone) return; // Already fullscreen, nothing to show
-
-    // Only show on mobile
-    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (!isMobileDevice) return;
 
     // Build install banner
     const banner = document.createElement('div');
@@ -533,9 +532,10 @@ document.addEventListener('DOMContentLoaded', () => {
       sessionStorage.setItem('pwa-dismissed', '1');
     });
 
-    // Android Chrome: capture beforeinstallprompt
+    // Android/Desktop Chrome: capture beforeinstallprompt
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('[PWA] beforeinstallprompt fired');
       e.preventDefault();
       deferredPrompt = e;
 
@@ -546,9 +546,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     installBtn.addEventListener('click', () => {
       if (deferredPrompt) {
-        // Android: trigger native install dialog
+        // Android/Desktop: trigger native install dialog
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => {
+        deferredPrompt.userChoice.then((choiceResult) => {
+          console.log('[PWA] User choice:', choiceResult.outcome);
           deferredPrompt = null;
           banner.classList.remove('pwa-visible');
         });
@@ -556,12 +557,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // iOS: no API available, show manual instructions
         const iosMsg = document.getElementById('pwa-ios-msg');
         if (iosMsg) iosMsg.classList.add('pwa-ios-visible');
+        else {
+          // Fallback alert for desktop testing if prompt not yet fired
+          alert("To install: Use the browser's menu (top right three dots) and click 'Install Azura 2K26'");
+        }
       }
     });
 
     // iOS fallback instruction bubble
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isIOS && !sessionStorage.getItem('pwa-dismissed')) {
+    if (isIOS) {
+      console.log('[PWA] iOS detected, setting up instructions');
       // Show iOS-specific instructions since beforeinstallprompt never fires on iOS
       const iosBubble = document.createElement('div');
       iosBubble.id = 'pwa-ios-msg';
