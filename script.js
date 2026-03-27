@@ -695,4 +695,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   })();
+
+  // ── FORCE CACHE REFRESH & SW UPDATE ──
+  (function() {
+    // 1. Manual Cache Purge (Check for version change)
+    const CURRENT_VERSION = 'azura-v2';
+    const storedVersion = localStorage.getItem('azura-site-version');
+
+    if (storedVersion !== CURRENT_VERSION) {
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          for (let name of names) caches.delete(name);
+        }).then(() => {
+          localStorage.setItem('azura-site-version', CURRENT_VERSION);
+          // If we had a previous version, force reload once
+          if (storedVersion) window.location.reload(true);
+        });
+      }
+    }
+
+    // 2. Service Worker Controller Change Detection
+    if ('serviceWorker' in navigator) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+  })();
 });
