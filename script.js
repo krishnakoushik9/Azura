@@ -350,11 +350,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   })();
 
+  // ── SMASH KARTS POPUP ──
+  (function() {
+    const smashOverlay  = document.getElementById('smash-overlay');
+    const smashClose    = document.getElementById('smash-close');
+
+    function openSmash() {
+      smashOverlay.classList.add('active');
+      smashOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSmash() {
+      smashOverlay.classList.remove('active');
+      smashOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    // Trigger on Smash Karts card click
+    document.querySelectorAll('.ev-card').forEach(card => {
+      if (card.dataset.type === 'smash') {
+        card.addEventListener('click', () => {
+          openSmash();
+        });
+      }
+    });
+
+    smashClose.addEventListener('click', closeSmash);
+
+    smashOverlay.addEventListener('click', (e) => {
+      if (e.target === smashOverlay) closeSmash();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && smashOverlay.classList.contains('active')) {
+        closeSmash();
+      }
+    });
+  })();
+
   // ── UI ENHANCEMENTS (Dock, Section Reveal, Scroll Audio) ──
   (function() {
     // 1. Scroll Whoosh Audio
     const whoosh = new Audio('Pop-ups/dragon-studio-simple-whoosh-02-433006.mp3');
-    whoosh.volume = 0.38;
+    whoosh.volume = 1.0;
     whoosh.preload = 'auto';
 
     let whooshLocked = false;
