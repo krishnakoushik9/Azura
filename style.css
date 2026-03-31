@@ -742,6 +742,31 @@ footer {
   from { opacity: 0; transform: translateY(26px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ─ Apple Silicon Optimizations ─ */
+.mac-silicon {
+  --reveal-speed: 0.23s;
+}
+
+.mac-silicon body {
+  font-size: 1.15em;
+}
+
+.mac-silicon .hero-sub {
+  max-width: 460px;
+}
+
+.mac-silicon .section-reveal {
+  transition-duration: var(--reveal-speed) !important;
+}
+
+@media (min-width: 1440px) {
+  .mac-silicon body { font-size: 1.25em; }
+}
+
+@media (min-width: 2000px) {
+  .mac-silicon body { font-size: 1.4em; }
+}
 @keyframes fadeIn {
   from { opacity: 0; } to { opacity: 1; }
 }

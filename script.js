@@ -761,4 +761,49 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   })();
+
+  // ── MAC OPTIMIZATION ──
+  (function() {
+    const isMac = /Mac|iPhone|iPod|iPad/.test(navigator.platform) || (navigator.userAgent.includes('Mac') && !navigator.userAgent.includes('Windows'));
+    const macModal = document.getElementById('mac-modal');
+    const btnSilicon = document.getElementById('mac-btn-silicon');
+    const btnIntel = document.getElementById('mac-btn-intel');
+
+    function applySilicon() {
+      document.documentElement.classList.add('mac-silicon');
+      // Triple reveal speed (base is 0.7s, 3x faster is ~0.23s)
+      document.documentElement.style.setProperty('--reveal-speed', '0.23s');
+    }
+
+    function checkChoice() {
+      const choice = sessionStorage.getItem('mac-choice');
+      if (choice === 'silicon') {
+        applySilicon();
+      } else if (!choice && isMac) {
+        setTimeout(() => {
+          if (macModal) {
+            macModal.classList.add('active');
+            macModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+          }
+        }, 3200);
+      }
+    }
+
+    function handleChoice(type) {
+      sessionStorage.setItem('mac-choice', type);
+      if (type === 'silicon') applySilicon();
+      
+      if (macModal) {
+        macModal.classList.remove('active');
+        macModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (btnSilicon) btnSilicon.onclick = () => handleChoice('silicon');
+    if (btnIntel) btnIntel.onclick = () => handleChoice('intel');
+
+    checkChoice();
+  })();
 });
