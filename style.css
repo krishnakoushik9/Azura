@@ -46,7 +46,7 @@ body {
 }
 .hero-eyebrow {
   font-family: 'DM Mono', monospace;
-  font-size: 0.6rem; letter-spacing: 0.34em;
+  font-size: 0.75rem; letter-spacing: 0.34em;
   color: var(--secondary); text-transform: uppercase;
   margin-bottom: 2.5rem;
   animation: fadeUp 1s ease both;
@@ -61,7 +61,7 @@ body {
 .hero-title em { font-style: italic; color: var(--primary); }
 .hero-year {
   font-family: 'DM Mono', monospace;
-  font-size: clamp(0.75rem, 2vw, 1.05rem);
+  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
   letter-spacing: 0.7em; color: var(--secondary);
   margin-top: 1.2rem;
   animation: fadeUp 1s 0.26s ease both;
@@ -73,8 +73,8 @@ body {
   animation: fadeIn 1.4s 0.5s ease both;
 }
 .hero-sub {
-  font-size: 0.8rem; letter-spacing: 0.06em;
-  color: var(--muted); line-height: 1.75; max-width: 340px;
+  font-size: 0.95rem; letter-spacing: 0.06em;
+  color: var(--muted); line-height: 1.75; max-width: 400px;
   animation: fadeIn 1s 0.6s ease both;
 }
 .hero-pills {
@@ -83,12 +83,12 @@ body {
   animation: fadeIn 1s 0.8s ease both;
 }
 .pill {
-  padding: 0.42rem 1.05rem;
+  padding: 0.5rem 1.2rem;
   border: 1px solid var(--border);
   border-radius: 100px;
   background: var(--surface);
   font-family: 'DM Mono', monospace;
-  font-size: 0.58rem; letter-spacing: 0.14em;
+  font-size: 0.72rem; letter-spacing: 0.14em;
   color: var(--primary); backdrop-filter: blur(8px);
   display: flex; align-items: center; gap: 0.45em;
 }
@@ -102,7 +102,7 @@ body {
   display: flex; flex-direction: column;
   align-items: center; gap: 0.6rem;
   color: var(--muted); font-family: 'DM Mono', monospace;
-  font-size: 0.52rem; letter-spacing: 0.22em; text-transform: uppercase;
+  font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
   animation: fadeIn 2s 1.4s ease both;
 }
 .scroll-track {
@@ -123,7 +123,7 @@ section {
 }
 .tag {
   font-family: 'DM Mono', monospace;
-  font-size: 0.57rem; letter-spacing: 0.28em;
+  font-size: 0.7rem; letter-spacing: 0.28em;
   color: var(--secondary); text-transform: uppercase;
   display: flex; align-items: center; gap: 0.8rem;
   margin-bottom: 0.75rem;
@@ -131,7 +131,7 @@ section {
 .tag::before { content: ''; width: 26px; height: 1px; background: var(--secondary); }
 .sec-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
   font-weight: 300; color: var(--accent);
   line-height: 1.08; margin-bottom: 3.5rem;
 }
@@ -141,20 +141,20 @@ section {
 .events-block { margin-bottom: 3rem; }
 .block-label {
   font-family: 'DM Mono', monospace;
-  font-size: 0.57rem; letter-spacing: 0.2em;
+  font-size: 0.7rem; letter-spacing: 0.2em;
   color: var(--secondary); text-transform: uppercase;
   margin-bottom: 1rem; padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border);
 }
 .events-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1px; background: var(--border);
   border: 1px solid var(--border);
   border-radius: 14px; overflow: hidden;
 }
 .ev-card {
-  background: var(--bg); padding: 1.75rem 1.4rem;
+  background: var(--bg); padding: 2rem 1.6rem;
   position: relative; overflow: hidden;
   transition: background 0.3s;
   cursor: pointer;
@@ -170,16 +170,16 @@ section {
 .ev-card:hover::after { transform: scaleX(1); }
 .ev-num {
   font-family: 'DM Mono', monospace;
-  font-size: 0.53rem; letter-spacing: 0.18em;
+  font-size: 0.65rem; letter-spacing: 0.18em;
   color: var(--secondary); margin-bottom: 1.1rem;
 }
 .ev-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.18rem; font-weight: 400;
+  font-size: 1.35rem; font-weight: 400;
   color: var(--accent); line-height: 1.2; margin-bottom: 0.25rem;
 }
 .ev-desc {
-  font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em;
+  font-size: 0.82rem; color: var(--muted); letter-spacing: 0.04em;
 }
 
 /* ─ Venue ─ */
@@ -213,9 +213,9 @@ section {
   background: var(--primary);
   color: var(--bg);
   font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
+  font-size: 0.7rem;
   letter-spacing: 0.2em;
-  padding: 0.35rem 0.9rem;
+  padding: 0.4rem 1rem;
   border-radius: 100px;
   font-weight: 500;
   width: fit-content;
@@ -223,14 +223,14 @@ section {
 
 .venue-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 400;
   color: var(--accent);
   line-height: 1.3;
 }
 
 .venue-address {
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.7;
   letter-spacing: 0.03em;
@@ -246,8 +246,8 @@ section {
 .venue-feat {
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 0.65rem 0.85rem;
-  font-size: 0.68rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.82rem;
   color: var(--muted);
   display: flex;
   align-items: center;
@@ -260,9 +260,9 @@ section {
   background: var(--primary);
   color: var(--bg);
   font-family: 'DM Mono', monospace;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.65rem;
   border-radius: 100px;
   text-decoration: none;
   font-weight: 500;
@@ -326,7 +326,7 @@ section {
   border-radius: 20px;
   padding: 2.5rem;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   position: relative;
   transform: translateY(20px);
   transition: transform 0.3s ease;
@@ -345,7 +345,7 @@ section {
   width: 28px; height: 28px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
@@ -357,7 +357,7 @@ section {
 
 .modal-tag {
   font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
+  font-size: 0.7rem;
   letter-spacing: 0.22em;
   color: var(--primary);
   text-transform: uppercase;
@@ -366,14 +366,14 @@ section {
 
 .modal-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 300;
   color: var(--accent);
   margin-bottom: 0.4rem;
 }
 
 .modal-sub {
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   color: var(--muted);
   line-height: 1.6;
   margin-bottom: 1.8rem;
@@ -382,18 +382,18 @@ section {
 .modal-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .modal-field {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .modal-label {
   font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
+  font-size: 0.7rem;
   letter-spacing: 0.18em;
   color: var(--secondary);
   text-transform: uppercase;
@@ -403,10 +403,10 @@ section {
   background: rgba(214,167,122,0.04);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.1rem;
   color: var(--accent);
   font-family: 'Outfit', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
@@ -426,9 +426,9 @@ section {
   color: var(--bg);
   border: none;
   border-radius: 100px;
-  padding: 0.85rem 1.5rem;
+  padding: 0.95rem 1.6rem;
   font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.78rem;
   letter-spacing: 0.14em;
   cursor: pointer;
   font-weight: 500;
@@ -439,7 +439,7 @@ section {
 .modal-submit:hover { opacity: 0.85; }
 
 .modal-note {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-align: center;
   margin-top: 0.3rem;
 }
@@ -458,10 +458,10 @@ section {
 }
 
 .modal-soon-text {
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   color: var(--muted);
   line-height: 1.7;
-  max-width: 280px;
+  max-width: 320px;
 }
 
 .modal-close-btn {
@@ -469,9 +469,9 @@ section {
   border: 1px solid var(--border);
   color: var(--primary);
   border-radius: 100px;
-  padding: 0.65rem 1.8rem;
+  padding: 0.75rem 2rem;
   font-family: 'DM Mono', monospace;
-  font-size: 0.60rem;
+  font-size: 0.72rem;
   letter-spacing: 0.14em;
   cursor: pointer;
   transition: background 0.2s;
@@ -534,11 +534,11 @@ section {
   background: rgba(26,20,16,0.8);
   border: 1px solid rgba(214,167,122,0.25);
   color: var(--accent);
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -568,7 +568,7 @@ section {
 }
 
 .ff-footer {
-  padding: 1.2rem 1.5rem 1.5rem;
+  padding: 1.5rem 1.8rem 1.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -581,9 +581,9 @@ section {
   background: var(--primary);
   color: var(--bg);
   font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.78rem;
   letter-spacing: 0.18em;
-  padding: 0.85rem 2.5rem;
+  padding: 1rem 3rem;
   border-radius: 100px;
   text-decoration: none;
   font-weight: 500;
@@ -605,7 +605,7 @@ section {
     aspect-ratio: 3/4;
   }
   .ff-footer {
-    padding: 1rem 1.2rem 1.3rem;
+    padding: 1.2rem 1.4rem 1.5rem;
   }
   .ff-register-btn {
     width: 100%;
@@ -622,15 +622,15 @@ section {
   border-radius: 14px; overflow: hidden;
   margin: 0 auto 7rem; max-width: 1060px;
 }
-.stat-cell { background: var(--bg); padding: 2rem 1.4rem; text-align: center; }
+.stat-cell { background: var(--bg); padding: 2.5rem 1.6rem; text-align: center; }
 .stat-val {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.1rem; font-weight: 300;
+  font-size: 2.5rem; font-weight: 300;
   color: var(--primary); line-height: 1; margin-bottom: 0.35rem;
 }
 .stat-lbl {
   font-family: 'DM Mono', monospace;
-  font-size: 0.52rem; letter-spacing: 0.16em;
+  font-size: 0.65rem; letter-spacing: 0.16em;
   color: var(--muted); text-transform: uppercase;
 }
 
@@ -638,7 +638,7 @@ section {
 .prize-banner {
   border: 1px solid var(--border);
   border-radius: 18px; background: var(--surface);
-  padding: 3.5rem 2rem; text-align: center;
+  padding: 4rem 2.5rem; text-align: center;
   margin: 0 2rem 7rem; max-width: 1060px;
   margin-left: auto; margin-right: auto;
   backdrop-filter: blur(12px); position: relative; overflow: hidden;
@@ -652,17 +652,17 @@ section {
 }
 .prize-label {
   font-family: 'DM Mono', monospace;
-  font-size: 0.56rem; letter-spacing: 0.28em;
+  font-size: 0.7rem; letter-spacing: 0.28em;
   color: var(--secondary); text-transform: uppercase; margin-bottom: 0.9rem;
 }
 .prize-text {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.5rem, 4vw, 2.7rem);
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
   font-weight: 300; color: var(--accent);
 }
 .prize-text em { font-style: italic; color: var(--primary); }
 .prize-sub {
-  margin-top: 0.75rem; font-size: 0.75rem;
+  margin-top: 0.85rem; font-size: 0.9rem;
   color: var(--muted); letter-spacing: 0.04em;
 }
 
@@ -680,7 +680,7 @@ section {
   }
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.2rem;
 }
 .team-card {
@@ -689,7 +689,7 @@ section {
   background: var(--surface); backdrop-filter: blur(10px);
 }
 .tc-head {
-  padding: 0.85rem 1.35rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; gap: 0.55rem;
 }
@@ -700,40 +700,40 @@ section {
 }
 .tc-title {
   font-family: 'DM Mono', monospace;
-  font-size: 0.55rem; letter-spacing: 0.18em;
+  font-size: 0.7rem; letter-spacing: 0.18em;
   color: var(--secondary); text-transform: uppercase;
 }
 .tc-member {
-  padding: 0.95rem 1.35rem;
+  padding: 1.1rem 1.5rem;
   border-bottom: 1px solid var(--border);
   display: flex; justify-content: space-between;
   align-items: center; gap: 1rem;
 }
 .tc-member:last-child { border-bottom: none; }
-.tc-name { font-size: 0.88rem; font-weight: 400; color: var(--accent); }
+.tc-name { font-size: 1.05rem; font-weight: 400; color: var(--accent); }
 .tc-role {
   font-family: 'DM Mono', monospace;
-  font-size: 0.52rem; letter-spacing: 0.1em;
+  font-size: 0.65rem; letter-spacing: 0.1em;
   color: var(--muted); text-transform: uppercase; margin-top: 2px;
 }
 .tc-phone {
   font-family: 'DM Mono', monospace;
-  font-size: 0.65rem; color: var(--primary); white-space: nowrap; flex-shrink: 0;
+  font-size: 0.78rem; color: var(--primary); white-space: nowrap; flex-shrink: 0;
 }
 
 /* ─ Footer ─ */
 footer {
   border-top: 1px solid var(--border);
-  padding: 3rem 2rem; text-align: center; z-index: 10; position: relative;
+  padding: 4rem 2rem; text-align: center; z-index: 10; position: relative;
 }
 .ft-brand {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.75rem; font-weight: 300;
+  font-size: 2rem; font-weight: 300;
   color: var(--primary); margin-bottom: 0.6rem;
 }
 .ft-meta {
   font-family: 'DM Mono', monospace;
-  font-size: 0.52rem; letter-spacing: 0.16em;
+  font-size: 0.65rem; letter-spacing: 0.16em;
   color: var(--muted); text-transform: uppercase; line-height: 2;
 }
 
@@ -797,12 +797,12 @@ body::after {
   -webkit-backdrop-filter: blur(28px) saturate(180%);
   border: 1px solid rgba(214, 167, 122, 0.18);
   border-radius: 100px;
-  padding: 6px 8px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.45),
-              inset 0 1px 0 rgba(214,167,122,0.12);
+              inset 0 1px 0 rgba(214, 167, 122,0.12);
   opacity: 0;
   animation: dockEntrance 0.6s 0.4s ease-out forwards;
   white-space: nowrap;
@@ -816,11 +816,11 @@ body::after {
 }
 
 .dock-pill {
-  padding: 8px 20px;
+  padding: 10px 24px;
   border-radius: 100px;
   color: rgba(243, 226, 208, 0.55);
   font-family: 'DM Mono', monospace;
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
@@ -866,19 +866,19 @@ body::after {
   .azura-dock {
     bottom: max(16px, env(safe-area-inset-bottom, 0px) + 8px);
     max-width: calc(100vw - 32px);
-    padding: 5px 6px;
+    padding: 6px 8px;
   }
   .dock-pill {
-    padding: 7px 13px;
-    font-size: 0.53rem;
+    padding: 8px 15px;
+    font-size: 0.65rem;
     letter-spacing: 0.13em;
   }
 }
 
 @media (max-width: 380px) {
   .dock-pill {
-    padding: 6px 10px;
-    font-size: 0.50rem;
+    padding: 7px 12px;
+    font-size: 0.6rem;
     letter-spacing: 0.10em;
   }
 }
@@ -893,7 +893,7 @@ html, body {
 /* PWA Install Banner */
 #pwa-banner {
   position: fixed;
-  bottom: 90px;
+  bottom: 95px;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   z-index: 950;
@@ -901,7 +901,7 @@ html, body {
   pointer-events: none;
   transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.23,1,0.32,1);
   width: calc(100% - 32px);
-  max-width: 420px;
+  max-width: 440px;
 }
 
 #pwa-banner.pwa-visible {
@@ -916,15 +916,15 @@ html, body {
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(214, 167, 122, 0.22);
   border-radius: 18px;
-  padding: 14px 16px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 }
 
 .pwa-icon {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   flex-shrink: 0;
 }
 
@@ -932,7 +932,7 @@ html, body {
 
 .pwa-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   font-weight: 500;
   color: var(--accent);
   line-height: 1.3;
@@ -940,7 +940,7 @@ html, body {
 
 .pwa-sub {
   font-family: 'DM Mono', monospace;
-  font-size: 0.52rem;
+  font-size: 0.65rem;
   letter-spacing: 0.08em;
   color: var(--muted);
   margin-top: 2px;
@@ -951,9 +951,9 @@ html, body {
   color: var(--bg);
   border: none;
   border-radius: 100px;
-  padding: 7px 16px;
+  padding: 8px 18px;
   font-family: 'DM Mono', monospace;
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   font-weight: 500;
   cursor: pointer;
@@ -967,7 +967,7 @@ html, body {
   background: none;
   border: none;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   cursor: pointer;
   padding: 4px;
   flex-shrink: 0;
@@ -987,10 +987,10 @@ html, body {
   background: rgba(30, 22, 14, 0.96);
   border: 1px solid rgba(214, 167, 122, 0.25);
   border-radius: 16px;
-  padding: 16px 20px;
+  padding: 18px 22px;
   text-align: center;
   width: calc(100% - 48px);
-  max-width: 320px;
+  max-width: 340px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 }
 
@@ -1001,14 +1001,14 @@ html, body {
 }
 
 .ios-arrow {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--primary);
   margin-bottom: 8px;
 }
 
 .ios-steps {
   font-family: 'Outfit', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   color: var(--muted);
   line-height: 1.7;
 }
@@ -1019,14 +1019,14 @@ html, body {
 }
 
 #pwa-ios-close {
-  margin-top: 12px;
+  margin-top: 14px;
   background: none;
   border: 1px solid var(--border);
   color: var(--primary);
   border-radius: 100px;
-  padding: 6px 20px;
+  padding: 8px 24px;
   font-family: 'DM Mono', monospace;
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   cursor: pointer;
 }
@@ -1038,7 +1038,7 @@ html, body {
   border-bottom: 1px dotted rgba(214, 167, 122, 0.4);
   transition: color 0.2s, border-color 0.2s;
   font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.78rem;
 }
 
 .contact-trigger:hover,
@@ -1073,9 +1073,9 @@ html, body {
   background: #1F1915;
   border: 1px solid rgba(214, 167, 122, 0.20);
   border-radius: 24px 24px 16px 16px;
-  padding: 28px 24px 24px;
+  padding: 32px 28px 28px;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   position: relative;
   transform: translateY(40px);
   transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
@@ -1088,18 +1088,18 @@ html, body {
 
 .cp-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 300;
   color: var(--accent);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   letter-spacing: 0.02em;
 }
 
 .cp-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
   margin-bottom: 4px;
 }
 
@@ -1108,9 +1108,9 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 18px 12px;
-  border-radius: 16px;
+  gap: 10px;
+  padding: 22px 14px;
+  border-radius: 18px;
   border: 1px solid var(--border);
   background: var(--surface);
   cursor: pointer;
@@ -1141,12 +1141,12 @@ html, body {
 }
 
 .cp-icon {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   line-height: 1;
 }
 
 .cp-label {
-  font-size: 0.60rem;
+  font-size: 0.75rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1159,11 +1159,11 @@ html, body {
   background: none;
   border: 1px solid var(--border);
   color: var(--muted);
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1183,6 +1183,6 @@ html, body {
   }
   .cp-box {
     border-radius: 20px;
-    max-width: 360px;
+    max-width: 380px;
   }
 }
