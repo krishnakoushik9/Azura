@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.addEventListener('click', () => {
         const type = card.dataset.type;
         const eventKey = card.dataset.event;
-        if (type === 'freefire') return; // handled by Phase 3
+        if (type === 'freefire' || type === 'smash') return; // handled by Phase 3 / Phase Smash
         openModal(type, eventKey);
       });
     });
