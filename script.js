@@ -50,10 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
           const gx = Math.floor((mx + ox) / SZ);
           const gy = Math.floor((my + oy) / SZ);
           if (c === gx && r === gy) {
-            ctx.fillStyle = 'rgba(214,167,122,0.09)';
+            ctx.fillStyle = 'rgba(214,167,122,0.18)';
             ctx.fillRect(sx, sy, SZ, SZ);
           }
-          ctx.strokeStyle = 'rgba(214,167,122,0.07)';
+          ctx.strokeStyle = 'rgba(214,167,122,0.14)';
           ctx.lineWidth = 0.5;
           ctx.strokeRect(sx, sy, SZ, SZ);
         }
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x1A1410, 1);
+    renderer.setClearColor(0x241D17, 1);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     const aspect = window.innerWidth / window.innerHeight;

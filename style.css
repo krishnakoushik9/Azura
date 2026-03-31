@@ -1,6 +1,6 @@
 :root {
-  --bg:       #1A1410;
-  --bg2:      #1F1915;
+  --bg:       #241D17;
+  --bg2:      #2A221C;
   --primary:  #D6A77A;
   --accent:   #F3E2D0;
   --secondary:#8C6A4F;
@@ -28,12 +28,12 @@ body {
   position: fixed; inset: 0;
   width: 100%; height: 100%;
   z-index: 1; pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.8;
 }
 .vignette {
   position: fixed; inset: 0; z-index: 2; pointer-events: none;
   background: radial-gradient(ellipse at center,
-    transparent 0%, rgba(26,20,16,0.5) 60%, rgba(26,20,16,0.95) 100%);
+    transparent 0%, rgba(26,20,16,0.3) 60%, rgba(26,20,16,0.7) 100%);
 }
 .content { position: relative; z-index: 10; }
 
